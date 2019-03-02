@@ -35,7 +35,23 @@ namespace Grades
             grades.Add(grade);
         }
 
-        public string Name;
+        //changing field to property with validation logic for the setter to protect the internal state
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                if (!String.IsNullOrEmpty(value))
+                {
+                    _name = value;
+                }
+            }
+        }
+
+        private string _name; 
 
         //field to store a list of grades
         private List<float> grades;
