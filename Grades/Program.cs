@@ -11,14 +11,19 @@ namespace Grades
     {
         static void Main(string[] args)
         {
-            //instantiating the grade book
-            GradeBook book = new GradeBook();
+            GradeBook book = CreateGradeBook();
 
             //used control + . to extract code into new methods to clean up the main method
             GetBookName(book);
             AddGrades(book);
             WriteResults(book);
             SaveGrades(book);
+        }
+
+        private static GradeBook CreateGradeBook()
+        {
+            //instantiating the grade book
+            return new ThrowAwayGradeBook();
         }
 
         //google msdn then search file.createtext to get a list of possible exceptions

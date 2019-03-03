@@ -83,6 +83,6 @@ namespace Grades
         public event NameChangedDelegate NameChanged;
 
         //field to store a list of grades
-        private List<float> grades;
+        protected List<float> grades;
     }
 }
