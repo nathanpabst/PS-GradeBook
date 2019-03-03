@@ -11,7 +11,9 @@ namespace Grades
         //constructor
         public GradeBook()
         {
+            _name = "Empty";
             grades = new List<float>();
+
         }
 
         public GradeStatistics ComputeStatistics()
@@ -46,12 +48,18 @@ namespace Grades
             {
                 if (!String.IsNullOrEmpty(value))
                 {
+                    if (_name != value)
+                    {
+                        NameChanged(_name, value);
+                    }
                     _name = value;
                 }
             }
         }
 
-        private string _name; 
+        private string _name;
+
+        public NameChangedDelegate NameChanged;
 
         //field to store a list of grades
         private List<float> grades;
