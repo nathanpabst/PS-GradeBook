@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,47 +11,62 @@ namespace Grades
     {
         static void Main(string[] args)
         {
-
             //instantiating the grade book
             GradeBook book = new GradeBook();
 
-            book.NameChanged += OnNameChanged;
-            
-            book.Name = "Nate's Grade Book";
-            book.Name = "Grade Book";
+            //used control + . to extract code into new methods to clean up the main method
+            GetBookName(book);
+            AddGrades(book);
+            WriteResults(book);
+            SaveGrades(book);
+        }
 
-            book.AddGrade(91);
-            book.AddGrade(89.5f);
-            book.AddGrade(75);
+        //google msdn then search file.createtext to get a list of possible exceptions
+        private static void SaveGrades(GradeBook book)
+        {
+            using (StreamWriter outputFile = File.CreateText("grades.txt"))
+            {
+                book.WriteGrades(outputFile);
+            }
+        }
 
+        private static void WriteResults(GradeBook book)
+        {
             GradeStatistics stats = book.ComputeStatistics();
-            Console.WriteLine(book.Name);
             WriteResult("Average", stats.AverageGrade);
-            //(int) as type-casting
-            WriteResult("Highest", (int)stats.HighestGrade);
+            WriteResult("Highest", stats.HighestGrade);
             WriteResult("Lowest", stats.LowestGrade);
-
-
+            WriteResult(stats.Description, stats.LetterGrade);
             Console.ReadLine();
         }
 
-        static void OnNameChanged(object sender, NameChangedEventArgs args)
+        private static void AddGrades(GradeBook book)
         {
-            Console.WriteLine($"Grade book changing name from {args.ExistingName} to {args.NewName}");
+            book.AddGrade(91);
+            book.AddGrade(89.5f);
+            book.AddGrade(75);
+        }
+
+        private static void GetBookName(GradeBook book)
+        {
+            try
+            {
+                Console.WriteLine("Enter a name");
+                book.Name = Console.ReadLine();
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         static void WriteResult(string description, float result)
         {
-            Console.WriteLine($"{description}: {result:F2}");
+            Console.WriteLine($"{description}: {result:F2}", description, result);
         }
-
-        //WriteResult is an overloaded method same name with different signatures. see float and int
-        static void WriteResult(string description, int result)
+        static void WriteResult(string description, string result)
         {
-            //formatting string using {} as placeholders. :F2 formats floating point number with 2 decimal places
-            //Console.WriteLine("{0}: {1:F2}", description, result);
-            //using string interpolation
-            Console.WriteLine($"{description}: {result:F2}");
+            Console.WriteLine($"{description}: {result}", description, result);
         }
 
     }
