@@ -50,7 +50,11 @@ namespace Grades
                 {
                     if (_name != value)
                     {
-                        NameChanged(_name, value);
+                        NameChangedEventArgs args = new NameChangedEventArgs();
+                        args.ExistingName = _name;
+                        args.NewName = value;
+                        
+                        NameChanged(this, args);
                     }
                     _name = value;
                 }
@@ -59,7 +63,7 @@ namespace Grades
 
         private string _name;
 
-        public NameChangedDelegate NameChanged;
+        public event NameChangedDelegate NameChanged;
 
         //field to store a list of grades
         private List<float> grades;
