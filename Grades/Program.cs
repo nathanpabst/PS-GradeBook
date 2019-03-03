@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,33 +11,53 @@ namespace Grades
     {
         static void Main(string[] args)
         {
-
             //instantiating the grade book
             GradeBook book = new GradeBook();
 
-            try
+            //used control + . to extract code into new methods to clean up the main method
+            GetBookName(book);
+            AddGrades(book);
+            WriteResults(book);
+            SaveGrades(book);
+        }
+
+        //google msdn then search file.createtext to get a list of possible exceptions
+        private static void SaveGrades(GradeBook book)
+        {
+            using (StreamWriter outputFile = File.CreateText("grades.txt"))
             {
-                Console.WriteLine("Enter a name");
-                book.Name = Console.ReadLine();
+                book.WriteGrades(outputFile);
             }
-            catch(ArgumentException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+        }
 
-            book.AddGrade(91);
-            book.AddGrade(89.5f);
-            book.AddGrade(75);
-            book.WriteGrades(Console.Out);
-
-
-
+        private static void WriteResults(GradeBook book)
+        {
             GradeStatistics stats = book.ComputeStatistics();
             WriteResult("Average", stats.AverageGrade);
             WriteResult("Highest", stats.HighestGrade);
             WriteResult("Lowest", stats.LowestGrade);
             WriteResult(stats.Description, stats.LetterGrade);
             Console.ReadLine();
+        }
+
+        private static void AddGrades(GradeBook book)
+        {
+            book.AddGrade(91);
+            book.AddGrade(89.5f);
+            book.AddGrade(75);
+        }
+
+        private static void GetBookName(GradeBook book)
+        {
+            try
+            {
+                Console.WriteLine("Enter a name");
+                book.Name = Console.ReadLine();
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         static void WriteResult(string description, float result)
